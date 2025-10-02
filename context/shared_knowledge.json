@@ -1,0 +1,48 @@
+{
+  "project": {
+    "name": "AWS Bedrock Minutes",
+    "root_path": "/Users/umatoratatsu/Documents/AWS/AWS-Handson/AWS-Bedrock-Mintues",
+    "tech_stack": {
+      "language": "Python 3.11+",
+      "framework": "FastAPI 0.104+",
+      "ai_model": "AWS Bedrock Nova Pro (amazon.nova-pro-v1:0)",
+      "storage": "AWS S3 only (no database)",
+      "testing": "pytest + moto"
+    },
+    "file_structure": {
+      "src_root": "src/",
+      "tests_root": "tests/",
+      "prompts": "prompts/",
+      "models": "src/models/",
+      "services": "src/services/",
+      "api": "src/api/",
+      "storage": "src/storage/"
+    }
+  },
+  "design_decisions": {
+    "storage_strategy": "S3 JSON files - no database, no ORM",
+    "ai_model_choice": "Nova Pro - 70% cheaper than Claude 3",
+    "architecture": "Serverless - Lambda + API Gateway",
+    "workflow": "3 stages: draft → review → final"
+  },
+  "conventions": {
+    "file_naming": "snake_case for .py files",
+    "class_naming": "PascalCase",
+    "imports": "absolute imports from src/",
+    "config": "all configuration in .env, zero hardcoding",
+    "async": "all I/O operations must be async"
+  },
+  "constitutional_principles": {
+    "KISS": "S3-only storage, single monolith, direct AWS calls",
+    "YAGNI": "no auth, no extra features, only 3-stage workflow",
+    "TDD": "tests first (T004-T012), then implementation",
+    "ZeroDebt": "no hardcoding, config externalized, SOLID",
+    "SOTA": "Python 3.11, FastAPI latest, Nova Pro"
+  },
+  "tasks": {
+    "total_tasks": 38,
+    "current_batch": 0,
+    "completed_tasks": [],
+    "ongoing_tasks": []
+  }
+}

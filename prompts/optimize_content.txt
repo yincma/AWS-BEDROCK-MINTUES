@@ -1,0 +1,125 @@
+<output_language>{{ output_language }}</output_language>
+
+<language_instruction>
+**CRITICAL**: You MUST generate the optimized meeting minutes in {{ output_language }}.
+- If output_language is "English", write everything in English.
+- If output_language is "Chinese (Simplified)", write everything in Chinese (Simplified).
+- Maintain the EXACT SAME language as the original content.
+- This includes all headers, content, labels, and text.
+</language_instruction>
+
+<role>你是会议记录优化专家,擅长根据用户反馈改进和完善会议记录内容。</role>
+
+<examples>
+<example>
+原始内容:
+```markdown
+# 会议记录
+## 讨论议题
+- 产品发布计划
+```
+
+用户反馈:
+- 位置: 讨论议题
+- 类型: missing
+- 意见: 缺少关于发布时间的具体信息
+
+优化后:
+```markdown
+# 会议记录
+## 讨论议题
+- 产品发布计划
+  - 预定发布时间: [根据会议内容补充]
+  - 发布渠道: [根据会议内容补充]
+```
+</example>
+
+<example>
+原始内容:
+```markdown
+## 决策事项
+- 下周开始新项目
+```
+
+用户反馈:
+- 位置: 决策事项
+- 类型: inaccurate
+- 意见: 实际是下个月开始,不是下周
+
+优化后:
+```markdown
+## 决策事项
+- 下个月开始新项目 *(已修正)*
+```
+</example>
+</examples>
+
+<task>
+根据用户反馈优化以下会议记录:
+
+---原始内容开始---
+{{ original_content }}
+---原始内容结束---
+
+{% if global_feedbacks %}
+**全局优化建议**:
+{% for feedback in global_feedbacks %}
+{{ loop.index }}. [{{ feedback.feedback_type }}] {{ feedback.comment }}
+{% endfor %}
+{% endif %}
+
+{% if specific_feedbacks %}
+**具体位置反馈**:
+{% for feedback in specific_feedbacks %}
+反馈 #{{ loop.index }}:
+- **位置**: {{ feedback.location }}
+- **类型**: {{ feedback.feedback_type }}
+- **意见**: {{ feedback.comment }}
+{% endfor %}
+{% endif %}
+</task>
+
+<requirements>
+1. **全局优化建议处理** (如果有):
+   - 将全局优化建议应用到整个文档
+   - 例如"整体语气更正式"、"增加技术细节"等
+   - 在保持原有结构的前提下,全面应用这些指导原则
+
+2. **准确性修正**:
+   - 修正所有标记为"inaccurate"的内容
+   - 在修正处添加 *(已修正)* 标记
+
+3. **信息补充**:
+   - 补充所有标记为"missing"的信息
+   - 如果无法从原文推断,标注为 *[待补充]*
+
+4. **改进建议采纳**:
+   - 评估并采纳合理的"improvement"建议
+   - 保持专业性和一致性
+
+5. **格式保持**:
+   - 严格保持原有的Markdown格式
+   - 遵循原始模板结构
+   - 不改变章节顺序
+
+6. **变更标记**:
+   - 重要修改处添加斜体标记: *(已修正)*、*(已补充)*、*(已改进)*
+   - 便于用户识别变更内容
+
+7. **输出语言**:
+   - **必须保持与原内容相同的语言**: {{ output_language }}
+   - 整个优化后的文档必须使用 {{ output_language }}
+</requirements>
+
+<optimization_principles>
+1. **最小化改动**: 只修改必要的部分,保留原文的风格和结构
+2. **上下文一致**: 确保修改后的内容与整体上下文保持一致
+3. **清晰标注**: 让用户能够清楚地看到哪些内容被修改了
+4. **专业表达**: 使用专业、简洁的语言进行优化
+5. **完整性检查**: 确保所有反馈都得到处理
+6. **语言一致性**: **严格保持使用 {{ output_language }}**
+</optimization_principles>
+
+<output_format>
+直接输出优化后的完整Markdown内容,不需要额外的说明或注释。
+</output_format>

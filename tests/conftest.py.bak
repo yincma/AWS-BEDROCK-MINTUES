@@ -1,0 +1,68 @@
+"""
+Pytest配置和共享fixtures
+"""
+import os
+import json
+import pytest
+import boto3
+from typing import Generator
+from httpx import AsyncClient
+from moto import mock_s3, mock_bedrock_runtime
+from src.api.main import app
+
+
+@pytest.fixture(scope="session")
+def aws_credentials():
+    """Mock AWS凭证"""
+    os.environ["AWS_ACCESS_KEY_ID"] = "testing"
+    os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
+    os.environ["AWS_SECURITY_TOKEN"] = "testing"
+    os.environ["AWS_SESSION_TOKEN"] = "testing"
+    os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
+    os.environ["AWS_REGION"] = "us-east-1"
+
+
+@pytest.fixture(scope="function")
+def aws_mock(aws_credentials):
+    """AWS服务Mock上下文"""
+    with mock_aws():
+        yield
+
+
+@pytest.fixture(scope="function")
+def s3_client(aws_mock):
+    """Mock S3客户端"""
+    client = boto3.client("s3", region_name="us-east-1")
+    return client
+
+
+@pytest.fixture(scope="function")
+def bedrock_runtime_client(aws_mock):
+    """Mock Bedrock Runtime客户端"""
+    client = boto3.client("bedrock-runtime", region_name="us-east-1")
+    return client
+
+
+@pytest.fixture(scope="function")
+def test_bucket(s3_client):
+    """创建测试用S3桶"""
+    bucket_name = "test-meeting-minutes-bucket"
+    s3_client.create_bucket(Bucket=bucket_name)
+    return bucket_name
+
+
+@pytest.fixture
+async def async_client():
+    """提供AsyncClient fixture用于API测试"""
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        yield client
+
+
+@pytest.fixture
+async def async_client_with_aws(aws_mock, test_bucket, monkeypatch):
+    """提供带AWS mock的AsyncClient"""
+    monkeypatch.setenv("S3_BUCKET_NAME", test_bucket)
+    monkeypatch.setenv("BEDROCK_MODEL_ID", "anthropic.claude-3-sonnet-20240229-v1:0")
+
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        yield client, test_bucket, boto3.client("s3", region_name="us-east-1")

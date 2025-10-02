@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+
+# AWS
+.aws/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+meeting_minutes.db
+*.mp3
+*.wav
+*.mp4
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
